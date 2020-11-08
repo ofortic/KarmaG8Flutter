@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: "Nunito"),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           child: loginPage(),
         ),
@@ -39,9 +41,24 @@ class _loginPageState extends State<loginPage> {
   double _loginYOffset = 0;
   double _loginXOffset = 0;
   double _registerYOffset = 0;
+  double _registerHeigth = 0;
 
   double windowWidth = 0;
   double windowHeigth = 0;
+
+  bool _keyboardVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) {
+        setState(() {
+          _keyboardVisible = visible;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +66,7 @@ class _loginPageState extends State<loginPage> {
     windowWidth = MediaQuery.of(context).size.width;
 
     _loginHeigth = windowHeigth - 270;
+    _registerHeigth = windowHeigth - 270;
 
     switch (_pageState) {
       case 0:
@@ -57,6 +75,7 @@ class _loginPageState extends State<loginPage> {
         _loginWidth = windowWidth;
         _loginOpacity = 1;
         _loginYOffset = windowHeigth;
+        _loginHeigth = _keyboardVisible ? windowHeigth : windowHeigth - 270;
         _loginXOffset = 0;
         _registerYOffset = windowHeigth;
         break;
@@ -65,7 +84,8 @@ class _loginPageState extends State<loginPage> {
         _headingTop = 90;
         _loginWidth = windowWidth;
         _loginOpacity = 1;
-        _loginYOffset = 270;
+        _loginYOffset = _keyboardVisible ? 40 : 270;
+        _loginHeigth = _keyboardVisible ? windowHeigth : windowHeigth - 270;
         _loginXOffset = 0;
         _registerYOffset = windowHeigth;
         break;
@@ -74,9 +94,11 @@ class _loginPageState extends State<loginPage> {
         _headingTop = 80;
         _loginWidth = windowWidth - 40;
         _loginOpacity = 0.7;
-        _loginYOffset = 250;
+        _loginYOffset = _keyboardVisible ? 30 : 240;
+        _loginHeigth = _keyboardVisible ? windowHeigth : windowHeigth - 240;
         _loginXOffset = 20;
-        _registerYOffset = 270;
+        _registerYOffset = _keyboardVisible ? 55 : 270;
+        _registerHeigth = _keyboardVisible ? windowHeigth : windowHeigth - 270;
         break;
     }
 
@@ -151,105 +173,121 @@ class _loginPageState extends State<loginPage> {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              _pageState = 2;
-            });
-          },
-          child: AnimatedContainer(
-            padding: EdgeInsets.all(32),
-            width: _loginWidth,
-            height: _loginHeigth,
-            curve: Curves.fastLinearToSlowEaseIn,
-            duration: Duration(milliseconds: 1000),
-            transform:
-                Matrix4.translationValues(_loginXOffset, _loginYOffset, 1),
-            decoration: BoxDecoration(
-                color: Colors.white.withOpacity(_loginOpacity),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "Login To Continue",
-                        style: TextStyle(fontSize: 20),
-                      ),
+        AnimatedContainer(
+          padding: EdgeInsets.all(32),
+          width: _loginWidth,
+          height: _loginHeigth,
+          curve: Curves.fastLinearToSlowEaseIn,
+          duration: Duration(milliseconds: 1000),
+          transform: Matrix4.translationValues(_loginXOffset, _loginYOffset, 1),
+          decoration: BoxDecoration(
+              color: Colors.white.withOpacity(_loginOpacity),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "Login To Continue",
+                      style: TextStyle(fontSize: 20),
                     ),
-                    InputWithIcon(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    InputWithIcon()
-                  ],
-                ),
-                Column(
-                  children: [
-                    PrimaryButton(
-                      btnText: "Login",
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    OutLineBtn(
+                  ),
+                  InputWithIcon(
+                    icon: Icons.email,
+                    hint: "Enter Email...",
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InputWithIcon(
+                    icon: Icons.vpn_key,
+                    hint: "Enter Password...",
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  PrimaryButton(
+                    btnText: "Login",
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _pageState = 2;
+                      });
+                    },
+                    child: OutLineBtn(
                       btnText: "Create New Account",
-                    )
-                  ],
-                ),
-              ],
-            ),
+                    ),
+                  )
+                ],
+              ),
+            ],
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              _pageState = 1;
-            });
-          },
-          child: AnimatedContainer(
-            padding: EdgeInsets.all(32),
-            curve: Curves.fastLinearToSlowEaseIn,
-            duration: Duration(milliseconds: 1000),
-            transform: Matrix4.translationValues(0, _registerYOffset, 1),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30))),
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "Create a New Account",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    PrimaryButton(
-                      btnText: "Create Account",
+        AnimatedContainer(
+          height: _registerHeigth,
+          padding: EdgeInsets.all(32),
+          curve: Curves.fastLinearToSlowEaseIn,
+          duration: Duration(milliseconds: 1000),
+          transform: Matrix4.translationValues(0, _registerYOffset, 1),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "Create a New Account",
+                      style: TextStyle(fontSize: 20),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    OutLineBtn(
+                  ),
+                  InputWithIcon(
+                    icon: Icons.email,
+                    hint: "Enter Email...",
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InputWithIcon(
+                    icon: Icons.vpn_key,
+                    hint: "Enter Password...",
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  PrimaryButton(
+                    btnText: "Create Account",
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _pageState = 1;
+                      });
+                    },
+                    child: OutLineBtn(
                       btnText: "Back To Login",
-                    )
-                  ],
-                ),
-              ],
-            ),
+                    ),
+                  )
+                ],
+              ),
+            ],
           ),
         )
       ],
@@ -258,6 +296,9 @@ class _loginPageState extends State<loginPage> {
 }
 
 class InputWithIcon extends StatefulWidget {
+  final IconData icon;
+  final String hint;
+  InputWithIcon({this.icon, this.hint});
   @override
   _InputWithIconState createState() => _InputWithIconState();
 }
@@ -274,7 +315,7 @@ class _InputWithIconState extends State<InputWithIcon> {
           Container(
               width: 60,
               child: Icon(
-                Icons.email,
+                widget.icon,
                 size: 20,
                 color: Colors.grey,
               )),
@@ -283,7 +324,7 @@ class _InputWithIconState extends State<InputWithIcon> {
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 20),
                 border: InputBorder.none,
-                hintText: "Enter Email..."),
+                hintText: widget.hint),
           ))
         ],
       ),
