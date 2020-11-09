@@ -1,3 +1,4 @@
+import 'package:KarmaG8Flutter/ui/home.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
@@ -211,8 +212,16 @@ class _loginPageState extends State<loginPage> {
               ),
               Column(
                 children: [
-                  PrimaryButton(
-                    btnText: "Login",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home())
+                      );
+                    },
+                    child: PrimaryButton(
+                      btnText: "Login",
+                    ),
                   ),
                   SizedBox(
                     height: 20,
