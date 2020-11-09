@@ -27,14 +27,14 @@ class MyFavorPage extends StatelessWidget {
               alignment: MainAxisAlignment.start,
               children: [
                 FlatButton(
-                  textColor: Colors.blue,
+                  textColor: Color(0xFFB41EAEC),
                   onPressed: () {
                     // Perform some action
                   },
                   child: const Text('Chat'),
                 ),
                 FlatButton(
-                  textColor: Colors.blue,
+                  textColor: Color(0xFFB41EAEC),
                   onPressed: () {
                     // Perform some action
                   },
@@ -50,6 +50,7 @@ class MyFavorPage extends StatelessWidget {
       // Respond to button press
       },
         child: Icon(Icons.add),
+        backgroundColor: Color(0xFFB41EAEC),
       ),
     );
   }

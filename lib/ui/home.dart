@@ -22,14 +22,15 @@ class  _homeState extends State<Home> {
     return Scaffold(
 
       appBar: AppBar(
-        title: Text('First Route')
+        title: Text('Karma G8'),
+        backgroundColor: Color(0xFFB41EAEC),
       ),
         body: _children[_currentIndex],
 
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xFFB41EAEC),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white.withOpacity(.60),
           selectedFontSize: 14,
