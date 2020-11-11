@@ -1,7 +1,6 @@
-import 'file:///C:/Users/cami9/AndroidStudioProjects/KarmaG8Flutter/lib/ui/Login/login.dart';
-import 'package:KarmaG8Flutter/ui/home.dart';
+import 'package:KarmaG8Flutter/ui/Login/login.dart';
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+
 
 void main() {
   runApp(MyApp());

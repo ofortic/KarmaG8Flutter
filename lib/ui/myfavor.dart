@@ -1,7 +1,9 @@
+import 'package:KarmaG8Flutter/ui/chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyFavorPage extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
     return Scaffold(
       body:Card(
@@ -29,7 +31,10 @@ class MyFavorPage extends StatelessWidget {
                 FlatButton(
                   textColor: Color(0xFFB41EAEC),
                   onPressed: () {
-                    // Perform some action
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatPage())
+                    );
                   },
                   child: const Text('Chat'),
                 ),
@@ -46,12 +51,81 @@ class MyFavorPage extends StatelessWidget {
         ),
       ),
       floatingActionButton:   FloatingActionButton(
+
         onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Stack(
+                    overflow: Overflow.visible,
+                    children: <Widget>[
+                      Positioned(
+                        right: -40.0,
+                        top: -40.0,
+                        child: InkResponse(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: CircleAvatar(
+                            child: Icon(Icons.close),
+                            backgroundColor: Color(0xFFB41EAEC),
+                          ),
+                        ),
+                      ),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Favors name',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Favors Description',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RaisedButton(
+                                child: Text("Submit"),
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    _formKey.currentState.save();
+                                  }
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+
       // Respond to button press
       },
+
         child: Icon(Icons.add),
         backgroundColor: Color(0xFFB41EAEC),
       ),
+
     );
   }
 }

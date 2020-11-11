@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'Login/login.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   MapScreenState createState() => MapScreenState();
@@ -33,7 +35,8 @@ class MapScreenState extends State<ProfilePage>
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(top: 20.0),
-                          child: new Stack(fit: StackFit.loose, children: <Widget>[
+                          child:
+                              new Stack(fit: StackFit.loose, children: <Widget>[
                             new Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +55,8 @@ class MapScreenState extends State<ProfilePage>
                               ],
                             ),
                             Padding(
-                                padding: EdgeInsets.only(top: 90.0, right: 100.0),
+                                padding:
+                                    EdgeInsets.only(top: 90.0, right: 100.0),
                                 child: new Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -83,7 +87,8 @@ class MapScreenState extends State<ProfilePage>
                               padding: EdgeInsets.only(
                                   left: 25.0, right: 25.0, top: 25.0),
                               child: new Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   new Column(
@@ -102,7 +107,9 @@ class MapScreenState extends State<ProfilePage>
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      _status ? _getEditIcon() : new Container(),
+                                      _status
+                                          ? _getEditIcon()
+                                          : new Container(),
                                     ],
                                   )
                                 ],
@@ -180,7 +187,6 @@ class MapScreenState extends State<ProfilePage>
                                       ),
                                       enabled: !_status,
                                       autofocus: !_status,
-
                                     ),
                                   ),
                                 ],
@@ -196,7 +202,7 @@ class MapScreenState extends State<ProfilePage>
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'Email ID',
+                                        'Favores Recientes',
                                         style: TextStyle(
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.bold),
@@ -214,13 +220,12 @@ class MapScreenState extends State<ProfilePage>
                                   new Flexible(
                                     child: new TextField(
                                       decoration: const InputDecoration(
-                                          hintText: "cacomas@uninorte.edu.co"),
+                                          hintText: "Sacar Fotocopias"),
                                       enabled: !_status,
                                     ),
                                   ),
                                 ],
                               )),
-
                           !_status ? _getActionButtons() : new Container(),
                         ],
                       ),
@@ -230,6 +235,14 @@ class MapScreenState extends State<ProfilePage>
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => loginPage()));
+          },
+          child: Icon(Icons.power_settings_new),
+          backgroundColor: Color(0xFFB41EAEC),
         ));
   }
 
@@ -252,18 +265,18 @@ class MapScreenState extends State<ProfilePage>
               padding: EdgeInsets.only(right: 10.0),
               child: Container(
                   child: new RaisedButton(
-                    child: new Text("Save"),
-                    textColor: Colors.white,
-                    color: Colors.green,
-                    onPressed: () {
-                      setState(() {
-                        _status = true;
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      });
-                    },
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0)),
-                  )),
+                child: new Text("Save"),
+                textColor: Colors.white,
+                color: Colors.green,
+                onPressed: () {
+                  setState(() {
+                    _status = true;
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                  });
+                },
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(20.0)),
+              )),
             ),
             flex: 2,
           ),
@@ -272,18 +285,18 @@ class MapScreenState extends State<ProfilePage>
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
                   child: new RaisedButton(
-                    child: new Text("Cancel"),
-                    textColor: Colors.white,
-                    color: Colors.red,
-                    onPressed: () {
-                      setState(() {
-                        _status = true;
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      });
-                    },
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0)),
-                  )),
+                child: new Text("Cancel"),
+                textColor: Colors.white,
+                color: Colors.red,
+                onPressed: () {
+                  setState(() {
+                    _status = true;
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                  });
+                },
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(20.0)),
+              )),
             ),
             flex: 2,
           ),
