@@ -1,56 +1,46 @@
+import 'package:KarmaG8Flutter/backend/firebase_real_time.dart';
 import 'package:KarmaG8Flutter/ui/chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MyFavorPage extends StatelessWidget {
+class MyFavorPage extends StatefulWidget {
+  @override
+  _MyFavorPageState createState() => _MyFavorPageState();
+}
+
+class _MyFavorPageState extends State<MyFavorPage> {
+  FirebaseProvider repo = new FirebaseProvider();
+  final name = TextEditingController();
+  final description = TextEditingController();
+  CollectionReference favor = Firestore.instance.collection('favores');
   final _formKey = GlobalKey<FormState>();
+
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            ListTile(
-              leading: Icon(Icons.arrow_drop_down_circle),
-              title: const Text('Sacar Fotocopias'),
-              subtitle: Text(
-                'LLevar al bambu',
-                style: TextStyle(color: Colors.black.withOpacity(0.6)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Sacar 4 copias de cada pagina, para antes de las 12:30AM',
-                style: TextStyle(color: Colors.black.withOpacity(0.6)),
-              ),
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.start,
-              children: [
-                FlatButton(
-                  textColor: Color(0xFFB41EAEC),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ChatPage())
-                    );
-                  },
-                  child: const Text('Chat'),
-                ),
-                FlatButton(
-                  textColor: Color(0xFFB41EAEC),
-                  onPressed: () {
-                    // Perform some action
-                  },
-                  child: const Text('Terminar'),
-                ),
-              ],
-            ),
-          ],
-        ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: favor.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+
+          return new ListView(
+            children: snapshot.data.documents.map((DocumentSnapshot document) {
+              return new ListTile(
+                title: new Text(document.data['Name']),
+                subtitle: new Text(document.data['Description']),
+              );
+            }).toList(),
+          );
+        },
       ),
-      floatingActionButton:   FloatingActionButton(
+
+      floatingActionButton: FloatingActionButton(
 
         onPressed: () {
           showDialog(
@@ -81,6 +71,7 @@ class MyFavorPage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: TextFormField(
+                                controller: name,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Favors name',
@@ -92,6 +83,7 @@ class MyFavorPage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: TextFormField(
+                                controller: description,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Favors Description',
@@ -106,6 +98,11 @@ class MyFavorPage extends StatelessWidget {
                                   textColor: Colors.white,
                                   color: Color(0xFFB41EAEC),
                                   onPressed: () {
+                                    repo.addProduct(
+                                        name.text, description.text);
+                                    name.clear();
+                                    description.clear();
+                                    Navigator.of(context).pop();
                                     // Respond to button press
                                   },
                                   child: Text('Aceptar'),
@@ -119,8 +116,8 @@ class MyFavorPage extends StatelessWidget {
                 );
               });
 
-      // Respond to button press
-      },
+          // Respond to button press
+        },
 
         child: Icon(Icons.add),
         backgroundColor: Color(0xFFB41EAEC),
@@ -129,3 +126,4 @@ class MyFavorPage extends StatelessWidget {
     );
   }
 }
+

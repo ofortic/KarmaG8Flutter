@@ -1,15 +1,17 @@
 import 'package:KarmaG8Flutter/models/message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final databaseReference = FirebaseDatabase.instance.reference();
 final FirebaseAuth _auth = FirebaseAuth.instance;
-
+final db = Firestore.instance;
 
 get _getFirebaseChatReference => databaseReference.child("fluttermessages");
 
-class FirebaseProvider{
+class FirebaseProvider {
   List<Message> messages = List();
+
   Future<String> sendChatMsg(String text) async {
     try {
       // var firebaseUser = await _auth.currentUser();
@@ -27,5 +29,15 @@ class FirebaseProvider{
     }
   }
 
-
+  Future<void> addProduct(String name, String description) async {
+    await db
+        .collection('favores')
+        .add({
+      'Name': name,
+      'Description': description,
+    });
+  }
+  CollectionReference cargarProductos(String uid) {
+    return db.collection('favores');
+  }
 }
