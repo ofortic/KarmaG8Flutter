@@ -76,14 +76,14 @@ Widget _buildItem(String textTitle,BuildContext context) {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            child: Text("Aceptar"),
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                _formKey.currentState.save();
-                              }
-                            },
-                          ),
+                            child: RaisedButton(
+                              textColor: Colors.white,
+                              color: Color(0xFFB41EAEC),
+                              onPressed: () {
+                                // Respond to button press
+                              },
+                              child: Text('Aceptar'),
+                            )
                         )
                       ],
                     ),

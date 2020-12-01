@@ -101,15 +101,15 @@ class MyFavorPage extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RaisedButton(
-                                child: Text("Submit"),
-                                onPressed: () {
-                                  if (_formKey.currentState.validate()) {
-                                    _formKey.currentState.save();
-                                  }
-                                },
-                              ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  textColor: Colors.white,
+                                  color: Color(0xFFB41EAEC),
+                                  onPressed: () {
+                                    // Respond to button press
+                                  },
+                                  child: Text('Aceptar'),
+                                )
                             )
                           ],
                         ),
