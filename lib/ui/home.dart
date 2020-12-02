@@ -3,30 +3,24 @@ import 'package:KarmaG8Flutter/ui/myfavor.dart';
 import 'package:KarmaG8Flutter/ui/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:KarmaG8Flutter/backend/firebase_auth.dart';
 
 class Home extends StatefulWidget {
   @override
   _homeState createState() => _homeState();
 }
-class  _homeState extends State<Home> {
-  int _currentIndex = 0;
-  final List<Widget> _children = [
-    ProfilePage(),
-    FavorsPage(),
-    MyFavorPage()
 
-  ];
+class _homeState extends State<Home> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [ProfilePage(), FavorsPage(), MyFavorPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      appBar: AppBar(
-        title: Text('Karma G8'),
-        backgroundColor: Color(0xFFB41EAEC),
-      ),
+        appBar: AppBar(
+          title: Text('Karma G8'),
+          backgroundColor: Color(0xFFB41EAEC),
+        ),
         body: _children[_currentIndex],
-
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
@@ -53,9 +47,7 @@ class  _homeState extends State<Home> {
               icon: Icon(Icons.library_books),
             ),
           ],
-        )
-
-    );
+        ));
   }
 }
 

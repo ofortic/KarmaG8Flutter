@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:KarmaG8Flutter/backend/firebase_auth.dart';
+import 'package:KarmaG8Flutter/providers/authProvider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../home.dart';
 import 'Login.dart';
@@ -12,6 +16,7 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
+  final _formKey = GlobalKey<FormState>();
   int _pageState = 0;
 
   var _backgroundColor = Colors.white;
@@ -86,6 +91,8 @@ class _loginPageState extends State<loginPage> {
         break;
     }
 
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passController = TextEditingController();
     return Stack(
       children: [
         AnimatedContainer(
@@ -148,9 +155,9 @@ class _loginPageState extends State<loginPage> {
                         borderRadius: BorderRadius.circular(50)),
                     child: Center(
                         child: Text(
-                          "Get Started",
-                          style: TextStyle(fontSize: 16),
-                        )),
+                      "Get Started",
+                      style: TextStyle(fontSize: 16),
+                    )),
                   ),
                 ),
               ),
@@ -181,6 +188,7 @@ class _loginPageState extends State<loginPage> {
                     ),
                   ),
                   InputWithIcon(
+                    controller: emailController,
                     icon: Icons.email,
                     hint: "Enter Email...",
                   ),
@@ -188,8 +196,13 @@ class _loginPageState extends State<loginPage> {
                     height: 20,
                   ),
                   InputWithIcon(
+                    controller: passController,
                     icon: Icons.vpn_key,
                     hint: "Enter Password...",
+                    onSubmit: (_) {
+                      _login(
+                          context, emailController.text, passController.text);
+                    },
                   )
                 ],
               ),
@@ -197,10 +210,8 @@ class _loginPageState extends State<loginPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home())
-                      );
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Home()));
                     },
                     child: PrimaryButton(
                       btnText: "Login",
@@ -247,6 +258,7 @@ class _loginPageState extends State<loginPage> {
                     ),
                   ),
                   InputWithIcon(
+                    controller: emailController,
                     icon: Icons.email,
                     hint: "Enter Email...",
                   ),
@@ -254,15 +266,39 @@ class _loginPageState extends State<loginPage> {
                     height: 20,
                   ),
                   InputWithIcon(
+                    controller: passController,
                     icon: Icons.vpn_key,
                     hint: "Enter Password...",
+                    onSubmit: (_) {
+                      _signUp(context, emailController.text,
+                          passController.text, emailController.text);
+                      // }
+                      setState(() {
+                        _pageState = 1;
+                      });
+                    },
                   )
                 ],
               ),
               Column(
                 children: [
-                  PrimaryButton(
-                    btnText: "Create Account",
+                  GestureDetector(
+                    onTap: () {
+                      // final form = _formKey.currentState;
+                      // form.save();
+                      // if (_formKey.currentState.validate()) {
+                      print(
+                          "email: $emailController password: $passController");
+                      _signUp(context, emailController.text,
+                          passController.text, emailController.text);
+                      // }
+                      setState(() {
+                        _pageState = 1;
+                      });
+                    },
+                    child: PrimaryButton(
+                      btnText: "Create Account",
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -285,12 +321,56 @@ class _loginPageState extends State<loginPage> {
       ],
     );
   }
+
+  _login(BuildContext context, String email, String password) {
+    signInWithFirebase(email, password).then((user) {
+      print("Usuario: $user");
+      _buildDialog(context, "Login", "Login OK ");
+      //model.setLogged();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    }).catchError((error) {
+      _buildDialog(context, "Login", error.toString());
+    });
+  }
+
+  _signUp(BuildContext context, String email, String password, String name) {
+    signUpWithFirebase(email, password, name).then((user) {
+      print(user);
+      _buildDialog(context, "Sign Up", "Sign Up OK").then((value) {
+        _formKey.currentState.reset();
+        Navigator.of(context).pop();
+      });
+    }).catchError((error) {
+      _buildDialog(context, "Sign Up", error.toString());
+    });
+  }
+
+  Future<void> _buildDialog(BuildContext context, _title, _message) {
+    return showDialog(
+      builder: (context) {
+        return AlertDialog(
+          title: Text(_title),
+          content: Text(_message),
+          actions: <Widget>[
+            FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                })
+          ],
+        );
+      },
+      context: context,
+    );
+  }
 }
 
 class InputWithIcon extends StatefulWidget {
   final IconData icon;
   final String hint;
-  InputWithIcon({this.icon, this.hint});
+  final TextEditingController controller;
+  final Function onSubmit;
+  InputWithIcon({this.icon, this.hint, this.controller, this.onSubmit});
   @override
   _InputWithIconState createState() => _InputWithIconState();
 }
@@ -313,18 +393,18 @@ class _InputWithIconState extends State<InputWithIcon> {
               )),
           Expanded(
               child: TextField(
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 20),
-                    border: InputBorder.none,
-                    hintText: widget.hint),
-              ))
+            onSubmitted: widget.onSubmit,
+            controller: widget.controller,
+            decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 20),
+                border: InputBorder.none,
+                hintText: widget.hint),
+          ))
         ],
       ),
     );
   }
 }
-
-
 
 class OutLineBtn extends StatefulWidget {
   final String btnText;
