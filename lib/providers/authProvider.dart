@@ -24,8 +24,9 @@ class AuthProvider extends ChangeNotifier {
     return _uid;
   }
 
-  Future<FirebaseUser> getUser() {
-    return _auth.currentUser();
+  Future<String> getUser() async{
+    FirebaseUser user=await _auth.currentUser();
+    return user.email;
   }
 
   void setLogged() {

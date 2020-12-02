@@ -85,9 +85,20 @@ class _ChatPageState extends State<ChatPage>
                 itemCount: messages.length,
                 itemBuilder: (context, posicion) {
                   var element = messages[posicion];
-                  return Container(
-                    height: 50,
-                    child: Center(child: Text('Entry ${element.text}')),
+                  return Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(element.user),
+                          subtitle: Text(
+                            element.text,
+                            style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                          ),
+                        ),
+
+                      ],
+                    ),
                   );
                 },
               ),
